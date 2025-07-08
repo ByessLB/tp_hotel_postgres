@@ -1,0 +1,26 @@
+services:
+  postgres:
+    # Nom du conteneur qui sera créé
+    container_name: db-hotel
+    # Image de base utilisée
+    image: postgres:17.2
+    # Variables d'environnement qui seront utilisées pour configurer le conteneur
+    environment:
+      # Utilisateur
+      - POSTGRES_USER=${POSTGRES_USER}
+      # Mot de passe
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # NOm d'une base de données créé au lancement du conteneur
+      - POSTGRES_DB=db-hotel
+    # Redirection de port
+    ports:
+      - "6666:5432"
+    # Le "docker-engine" tente systématiquement de redémarrer le conteneur
+    # de plus, le conteneur est démarrer automatiquement au lancement du "docker engine"
+    restart: always
+    # Création du volume permettant d'ajouter le script de création de la BDD au conteneur Docker
+    # ici, 2 fichiers seront intégrer dans l'ordre alpha-numéric (rajout de chiffre dans le nom du
+    # fichier pour être plus explicite)
+    volumes:
+      - ./db/1-hotel-postgre-incomplet.sql:/docker-entrypoint-initdb.d/1-hotel-postgre-incomplet.sql
+      - ./db/2-hotel-postgre-insert.sql:/docker-entrypoint-initdb.d/2-hotel-postgre-insert.sql
